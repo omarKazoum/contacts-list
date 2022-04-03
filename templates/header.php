@@ -16,28 +16,3 @@
     </h1>
     <a href="Youcode/workshoops/Application de gestion des contacts/login.php" class="link">Login</a>
 </header>
-<main class="containner mx-1">
-    <div class="jombotron">
-        <h1>Hello</h1>
-        <p>
-            <a href="signup.php" class="link">Sign up</a>
-            to start creating your contacts list.
-        </p>
-        <p>
-            Already have an account? <a href="Youcode/workshoops/Application de gestion des contacts/login.php" class="link">Login here</a>.
-        </p>
-    </div>
-</main>
-<h1 class="bg-success">
-<?php
-//$name="id";
-//$$name=13;
-//echo $id;
-//include "test.php";
-print_r($_SERVER['REQUEST_URI']);
-
-?>
-</h1>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-</body>
-</html>

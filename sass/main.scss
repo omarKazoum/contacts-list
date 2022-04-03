@@ -1,5 +1,6 @@
 $colorPurple:#8021FE;
 $colorGray:#E8EBEF;
+$colorBlack:#111;
 .jombotron{
   background-color: $colorGray;
   border-radius:10px;
@@ -17,6 +18,8 @@ header{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color:$colorBlack;
+;
 }
 $dirs:('t':"top",'b':"bottom",'l':"left",'r':"right");
 $step:0.25rem;

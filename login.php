@@ -1,2 +1,1 @@
-<?php
-echo "login page";
+<?php require_once "templates/header.php" ?>
