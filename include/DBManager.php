@@ -108,8 +108,6 @@ class DBManager
         }else{
             return null;
         }
-
-
     }
     /**
      * unused
