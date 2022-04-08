@@ -1,4 +1,6 @@
-<?php require_once "templates/header.php"?>
+<?php
+$page_title="Contacts list";
+require_once "templates/header.php"?>
 <main class="containner mx-1">
     <div class="jombotron">
         <h1>Hello</h1>
