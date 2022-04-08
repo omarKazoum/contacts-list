@@ -63,43 +63,13 @@ class DBManager
      * @return bool
      */
     private function createTables(){
-            $students_table_query='CREATE TABLE '.DBContract::$Students_TableName.'('
-                .DBContract::$Students_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
-                .DBContract::$Students_Col_Name.' VARCHAR(20),'
-                .DBContract::$Students_Col_Image.' TEXT,'
-                .DBContract::$Students_Col_Email.' TEXT ,'
-                .DBContract::$Students_Col_Phone.' VARCHAR(12) ,'
-                .DBContract::$Students_Col_EnrollNbr.' TEXT ,'
-                .DBContract::$Students_Col_DateAdmission.' DATE '
-                .DBContract::$Students_Col_PasswordHash.' TEXT'
-            .')';
-            $payments_table_query='CREATE TABLE '.DBContract::$PaymentDetails_TableName.'('
-                        .DBContract::$PaymentDetails_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
-                        .DBContract::$PaymentDetails_Col_Name.' VARCHAR(20),'
-                        .DBContract::$PaymentDetails_Col_PaymentSchechule.' INT,'
-                        .DBContract::$PaymentDetails_Col_BillNbr.' VARCHAR(30),'
-                        .DBContract::$PaymentDetails_Col_AmountPaid.' FLOAT(10),'
-                        .DBContract::$PaymentDetails_Col_BalanceAmount.' FLOAT(10),'
-                        .DBContract::$PaymentDetails_Col_Date.' DATE'.
-                    ')';
-
-            $courses_table_query='CREATE TABLE '.DBContract::$Courses_TableName.'('
-                .DBContract::$Courses_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
-                .DBContract::$Courses_Col_Title.' VARCHAR(30),'
-                .DBContract::$Courses_Col_MentorName.' VARCHAR(20),'
-                .DBContract::$Courses_Col_Date.' DATETIME,'
-                .DBContract::$Courses_Col_Duration.' TIME'
-            .')';
-            $users_table_query='CREATE TABLE '.DBContract::$Users_TableName.'('
-                    .DBContract::$Users_Col_Id.' INT AUTO_INCREMENT PRIMARY KEY,'
-                    .DBContract::$Users_Col_Email.' VARCHAR(40),'
-                    .DBContract::$Users_Col_UserName.' VARCHAR(30),'
-                    .DBContract::$Users_Col_PasswordHash.' TEXT'
+        //TODO:: remove the email form the user attributes
+            $users_table_query='CREATE TABLE '.Constants::Users_TableName.'('
+                    .Constants::Users_Col_Id.' INT AUTO_INCREMENT PRIMARY KEY,'
+                    .Constants::Users_Col_Email.' VARCHAR(40),'
+                    .Constants::Users_Col_UserName.' VARCHAR(30),'
+                    .Constants::Users_Col_PasswordHash.' TEXT'
                 .')';
-            ;
-            //echo '<br>user table query is: '.$users_table_query.'</br>';
-            //echo '<br>payments table query : '.$payments_table_query;
-            //echo '<br>courses table query : '.$courses_table_query;
             $r1=DBManager::$db_connection->query($students_table_query);
             $r2=DBManager::$db_connection->query($payments_table_query);
             $r3=DBManager::$db_connection->query($courses_table_query);
@@ -108,6 +78,7 @@ class DBManager
         }
 
     /**
+     * should only be called once in the lifetime of the app at first use
      * create the database and all the required tables
      * @return void
      */
@@ -124,14 +95,15 @@ class DBManager
      */
     public function getUserById(int $userId)
     {
-        $sql='SELECT * FROM '.DBContract::$Users_TableName.' WHERE '.DBContract::$Users_Col_Id.'='.$userId;
+        //TODO change the query to fit the new data structure
+        $sql='SELECT * FROM '.Constants::Users_TableName.' WHERE '.Constants::Users_Col_Id.'='.$userId;
         $res=DBManager::$db_connection->query($sql)->fetch_assoc();
         if($res) {
             $user = new User();
             $user->setId($userId);
-            $user->setEmail($res[DBContract::$Users_Col_Email]);
-            $user->setPasswordHash($res[DBContract::$Users_Col_PasswordHash]);
-            $user->setUserName($res[DBContract::$Users_Col_UserName]);
+            $user->setEmail($res[Constants::Users_Col_Email]);
+            $user->setPasswordHash($res[Constants::Users_Col_PasswordHash]);
+            $user->setUserName($res[Constants::Users_Col_UserName]);
             return $user;
         }else{
             return null;
@@ -139,26 +111,6 @@ class DBManager
 
 
     }
-    public function getUserByEmail(string $userEmail){
-        $sql='SELECT * FROM '.DBContract::$Users_TableName.' WHERE '.DBContract::$Users_Col_Email."=?";
-        $statment=DBManager::$db_connection->prepare($sql);
-        $statment->bind_param('s',$userEmail);
-        $row=null;
-        $statment->execute();
-        $result=$statment->get_result();
-        if( $row=$result->fetch_assoc()) {
-            $user = new User();
-            $user->setId($row[DBContract::$Users_Col_Id]);
-            $user->setEmail($row[DBContract::$Users_Col_Email]);
-            $user->setPasswordHash($row[DBContract::$Users_Col_PasswordHash]);
-            $user->setUserName($row[DBContract::$Users_Col_UserName]);
-            return $user;
-        }else{
-            return null;
-        }
-
-    }
-
     /**
      * unused
      * @return DBManager|null
@@ -176,4 +128,5 @@ class DBManager
            mysqli_close(DBManager::$db_connection);
 
     }
+
 }
