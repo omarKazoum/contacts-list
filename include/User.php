@@ -1,5 +1,6 @@
 <?php
-class User{
+class User extends ModelBase {
+    protected const table_name = Constants::Users_TableName;
     private string $userName;
     private int $id;
     private string $passwordHash;
@@ -74,4 +75,23 @@ class User{
         $this->registerDate = $registerDate;
     }
 
+    public function update()
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function add()
+    {
+        // TODO: Implement add() method.
+    }
+
+    public function delete()
+    {
+        // TODO: Implement delete() method.
+    }
+
+    public function getAll()
+    {
+        // TODO: Implement getAll() method.
+    }
 }

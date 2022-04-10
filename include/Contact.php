@@ -1,6 +1,6 @@
 <?php
 
-class Contact
+class Contact  extends ModelBase
 {
     private int $id;
     private int $nom;
@@ -89,6 +89,23 @@ class Contact
     }
 
 
+    public function update()
+    {
+        // TODO: Implement update() method.
+    }
 
+    public function add()
+    {
+        // TODO: Implement add() method.
+    }
 
+    public function delete()
+    {
+        // TODO: Implement delete() method.
+    }
+
+    public function getAll()
+    {
+        // TODO: Implement getAll() method.
+    }
 }
