@@ -1,43 +1,17 @@
 $colorPurple:#8021FE;
 $colorGray:#E8EBEF;
 $colorBlack:#111;
-.jombotron{
-  background-color: $colorGray;
-  border-radius:10px;
-  padding: 10px;
+:root{
+  --bs-primary:$colorPurple !important;
+}
+.btn-primary{
+  background-color: $colorPurple !important;
+  border-color: $colorPurple !important;
 }
 .link{
   color: $colorPurple;
   text-decoration: none;
   &:hover{
     color:$colorPurple;
-  }
-}
-
-header{
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color:$colorBlack;
-}
-$dirs:('t':"top",'b':"bottom",'l':"left",'r':"right");
-$step:0.25rem;
-@for $i from 1 through 5 {
-  @each $name,$dir in $dirs{
-    .p#{$name}-#{$i}{
-      padding-#{$dir}:$i*$step;
-    }
-    .m#{$name}-#{$i}{
-      padding-#{$dir}:$i*$step;
-    }
-  }
-  .px-#{$i}{
-    padding-left:$i*$step;
-    padding-right:$i*$step;
-  }
-  .py-#{$i}{
-    padding-top:$i*$step;
-    padding-bottom:$i*$step;
   }
 }
