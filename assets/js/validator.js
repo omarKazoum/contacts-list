@@ -45,6 +45,7 @@ const bindFormValidator=() =>{
             if (allValide) {
                 console.log('all valid');
             }else{
+                e.stopImmediatePropagation();
                 console.log('not all is valid');
             }
         })

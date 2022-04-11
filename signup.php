@@ -7,14 +7,15 @@ require_once "templates/header.php" ?>
             <h1 class="page-header text-align-center w-100">
                 Authenticate
             </h1>
-            <form class="needs-validation">
+            <form class="needs-validation" id="signupForm"
+                  data-validate-callback="">
                 <div class="form-group">
                     <label for="<?=Constants::Users_Col_UserName?>" class="form-label">Username</label>
                     <input
                         id="<?=Constants::Users_Col_UserName?>"
                         type="text"
                         class="form-control"
-                        data-validate-pattern="^[a-zA-Z0-9]{3,}$"
+                        data-validate-pattern="^([a-zA-Z0-9]{3,}\s?)+$"
                         data-validate-message="the username should contain only numbers and letters."
                         data-validate="1"
                         placeholder="Username"

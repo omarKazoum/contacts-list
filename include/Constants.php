@@ -26,4 +26,14 @@ class Constants
     const Session_RememberMe='rememberme';
     const Session_RememberMe_Email='rememberme_email';
     const Session_RememberMe_Pass='rememberme_pass';
+
+    //for the api
+    const ACTION_KEY='action';
+    const ACTION_TYPE_SIGNUP="SIGNUP";
+    const ACTION_TYPE_LOGIN="LOGIN";
+    const ACTION_TYPE_ADD_CONTACT="ADD_CONTACT";
+    const ACTION_TYPE_UPDATE_CONTACT="UPDATE_CONTACT";
+
+    const API_MSG_KEY='message';
+
 }

@@ -1,2 +1,3 @@
 <?php
-echo "id is : ".$id;
+
+    phpinfo();
