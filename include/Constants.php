@@ -3,13 +3,27 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
 class Constants
 {
     //for users table
-    public const Users_TableName='comptes';
-    public const Users_Col_Id='id';
-    public const Users_Col_Email='email';
-    public const Users_Col_UserName='name';
-    public const Users_Col_PasswordHash='pass_hash';
-    public const Users_Password='pass';
-    public const Session_RememberMe='rememberme';
-    public const Session_RememberMe_Email='rememberme_email';
-    public const Session_RememberMe_Pass='rememberme_pass';
+    const Users_TableName='comptes';
+    const Users_Col_Id='id';
+    const Users_Col_Email='email';
+    const Users_Col_UserName='name';
+    const Users_Col_PasswordHash='pass_hash';
+    const Users_Password='pass';
+    //not stored
+    const Users_Password2='pass2';
+
+
+    // for contacts table
+    const Contacts_TableName='contacts';
+    const Contacts_Col_Id='id';
+    const Contacts_Col_Name='nom';
+    const Contacts_Col_Phone='phone';
+    const Contacts_Col_Email='email';
+    const Contacts_Col_Adress='adress';
+
+
+    //for remember me option
+    const Session_RememberMe='rememberme';
+    const Session_RememberMe_Email='rememberme_email';
+    const Session_RememberMe_Pass='rememberme_pass';
 }
