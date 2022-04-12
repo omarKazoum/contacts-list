@@ -7,13 +7,25 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/include/utils.php';
 
 header('Content-Type: application/json; charset=utf-8');
 $response=array();
+
+function setResponseMainInfo($msg, $responseCode){
+    global $response;
+    http_response_code($responseCode);
+    $response[Constants::API_MSG_KEY]=$msg;
+}
+
 $am=AccountManager::getInstance();
 $db_manager=DBManager::getInstance();
-if(!$am->isLoggedIn()){
-    http_response_code(400);
-    $response[Constants::API_MSG_KEY]='you are not logged in';
+if(!isset($_GET[Constants::ACTION_KEY])){
+    setResponseMainInfo('Please specify an action',400);
     exit(json_encode($response));
 }
+/*
+ * TODO:: uncomment this later to allow login protection
+if(!$am->isLoggedIn()){
+    setResponseMainInfo('you are not logged in',400);
+    exit(json_encode($response));
+}*/
 if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_SIGNUP) {
     //processing submitted data
     if (AreAllStudentSignUpFieldsSet()
@@ -32,6 +44,8 @@ if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_SIGNUP) {
     //let's add a contact
 }else if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_UPDATE_CONTACT){
     //let's update a contact
+}else{
+    setResponseMainInfo("action not supported!",402);
 }
 //if there are any validation errors they will be added to the response or nothing is added otherwise
 if(isset($_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS]))
