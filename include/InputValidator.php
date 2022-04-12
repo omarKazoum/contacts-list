@@ -1,5 +1,5 @@
 <?php
-
+require_once $_SERVER['DOCUMENT_ROOT']."/autoloader.php";
 class InputValidator
 {
     public  const INPUT_VALIDATOR_ERRORS='errors';
@@ -8,7 +8,9 @@ class InputValidator
     public  const PASSWORD_PATTERN='/^.{8,100}$/';
     public  const EMAIL_PATTERN='/^\w+@\w+(\.\w+)+$/';
     public  const PHONE_PATTERN='/^\+{0,1}(212)|0[658]\d{8}$/';
+    public  const NAME_PATTERN='/^([a-zA-Z0-9]{3,}\s?)+$/';
     public  const PHONE_ERROR_KEY ='phone' ;
+
 
     public static function flushErrors(){
             unset($_SESSION[self::INPUT_VALIDATOR_ERRORS]);
@@ -25,13 +27,10 @@ class InputValidator
      * @param string $password
      * @return bool
      */
-    public static function validatePassword(string $password):bool{
+    public static function validatePassword(string $password,$key):bool{
         $res=preg_match(self::PASSWORD_PATTERN,$password);
         if(!$res){
-            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]))
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]="<li>Password must be at least 8 characters long</li>";
-            else
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY].="<li>Password must be at least 8 characters long</li>";
+            self::appendError($key,"Password must be at least 8 characters long");
         }
         return $res;
     }
@@ -44,58 +43,79 @@ class InputValidator
      * @param string $email
      * @return bool
      */
-    public static function validateEmail(string $email):bool{
+    public static function validateEmail(string $email,$key):bool{
         $res=preg_match(self::EMAIL_PATTERN,$email);
         if(!$res){
-            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Invalid email address</li>";
-            else
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY].="<li>Invalid email address</li>";
+            self::appendError($key,'Invalid email address');
         }
         return $res;
     }
-    public static function validateEmailsMatch(string $email1,string $email2){
-        $isEmailValide=self::validateEmail($email1);
-        $isMatch=$email1==$email2 ;
-        if(!$isMatch){
-            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Emails Must match</li>";
-            else
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY].="<li>Emails Must match</li>";
-        }
-        return $isMatch AND $isEmailValide;
-    }
-    public static function validatePasswordsMatch(string $password1,string $password2){
-        $isPasswordValide=self::validatePassword($password1);
+    public static function validatePasswordsMatch(string $password1,string $password2,$key){
+        $isPasswordValid=self::validatePassword($password1,$key);
         $isPasswordsMatch=$password1==$password2 ;
         if(!$isPasswordsMatch){
-            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]))
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]="<li>Passwords must match</li>";
-            else
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY].="<li>Passwords must match</li>";
+           self::appendError($key,"Passwords must match");
         }
-        return $isPasswordsMatch AND $isPasswordValide;
+        return $isPasswordsMatch AND $isPasswordValid;
     }
-    public static function validatePhone(string $phoneNbr){
+    public static function validatePhone(string $phoneNbr,$key){
         $isPhoneValid=preg_match(self::PHONE_PATTERN,$phoneNbr);;
         if(!$isPhoneValid)
-            $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PHONE_ERROR_KEY]="<li>Invalid phone number:must start with 212 or 0 and then 6,5 or 8 followed by 8 numbers  </li>";
+            self::appendError($key,"Invalid phone number:must start with 212 or 0 and then 6,5 or 8 followed by 8 numbers");
         return $isPhoneValid;
     }
     public static function error(string $input_key){
         return $_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][$input_key]??false;
     }
-    public static function validateStudentEmailExists( $exists){
-        if($exists){
-            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Email address already in use by another student</li>";
-            else
-                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY].="<li>Email address already in use by another student</li>";
-        }
+    public static function validateUserNameDoesNotExist(string $userName,$key)
+    {
+        $exists=User::getByName($userName);
+        if($exists)
+            self::appendError($key,"User name already taken");
         return !$exists;
     }
-
-    public static function validateUserNameExists(string $Users_Col_UserName)
+    static function AreAllSignUpFieldsSet():bool{
+        $userFields=array(
+            Constants::Users_Password,
+            Constants::Users_Col_UserName,
+            Constants::Users_Password2,
+        );
+        return self::areAllFieldsSet($userFields,'POST');
+    }
+    static function areAllFieldsSet(array $fields,string $method,array $fieldsCustomNames=[]) :bool{
+        $isAllSet=true;
+        foreach ($fields as $key=> $field){
+            if(($method =='GET' and !isset($_GET[$field])) or ($method =='POST' and !isset($_POST[$field]) )) {
+                $isAllSet = false;
+                self::appendError($field, ($fieldsCustomNames[$key] ?? $field) . ' is required');
+            }
+        }
+        return $isAllSet;
+    }
+    public static function validateUserName($userName, $key)
     {
+        $valid=preg_match(self::NAME_PATTERN,$userName);
+        if(!$valid)
+            $_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][$key]="User name must be 3 letters long and contain only alphanumeric characters";
+        return $valid;
+    }
+     static function appendError($key,$message){
+        if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][$key]))
+            $_SESSION[self::INPUT_VALIDATOR_ERRORS][$key]="$message";
+        else
+            $_SESSION[self::INPUT_VALIDATOR_ERRORS][$key].="\<br\>$message";
+    }
+
+    public static function validateLoginParamsSet(array $fields, $method, array $fieldsCustomNames=[]):bool{
+    {
+        $isAllSet=true;
+        foreach ($fields as $key=> $field){
+            if(($method =='GET' and !isset($_GET[$field])) or ($method =='POST' and !isset($_POST[$field]) )) {
+                $isAllSet = false;
+                self::appendError($field, 'invalid '.($fieldsCustomNames[$key] ?? $field) );
+            }
+        }
+        return $isAllSet;
+    }
     }
 }

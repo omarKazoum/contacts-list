@@ -35,6 +35,8 @@ class Constants
     const ACTION_TYPE_LOGIN="LOGIN";
     const ACTION_TYPE_ADD_CONTACT="ADD_CONTACT";
     const ACTION_TYPE_UPDATE_CONTACT="UPDATE_CONTACT";
+    const ACTION_TYPE_LIST_CONTACTS="LIST_CONTACTS";
+
 
     const API_MSG_KEY='message';
     const Contacts_Col_UserId ="user_id" ;

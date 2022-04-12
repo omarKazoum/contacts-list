@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBManager.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/include/Constants.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/InputValidator.php';
+
+require_once $_SERVER['DOCUMENT_ROOT']."/autoloader.php";
 class AccountManager
 {
     private const  CONNECTED_USER_ID_KEY='connected_user_id';
@@ -61,6 +59,20 @@ class AccountManager
     }
     public function getLoggedInUser():User{
         $db_manager=DBManager::getInstance();
-        return  $db_manager->getUserById($this->connectedUserId);
+        return  User::getById($this->connectedUserId);
     }
+    public function redirectToContactsListIfLoggedIn()
+    {
+        if ($this->isLoggedIn()){
+            header('location:'.getUrlFor("contacts.php"));
+            exit();
+        }
+    }
+    public function redirectToIndexIfNotLoggedIn(){
+        if (!$this->isLoggedIn()){
+            header('location:'.getUrlFor('index.php'));
+            exit();
+        }
+    }
+
 }

@@ -1,19 +1,12 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/Constants.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/AccountManager.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBManager.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/InputValidator.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/utils.php';
-
+require_once $_SERVER['DOCUMENT_ROOT']."/autoloader.php";
 header('Content-Type: application/json; charset=utf-8');
 $response=array();
-
 function setResponseMainInfo($msg, $responseCode){
     global $response;
     http_response_code($responseCode);
     $response[Constants::API_MSG_KEY]=$msg;
 }
-
 $am=AccountManager::getInstance();
 $db_manager=DBManager::getInstance();
 if(!isset($_GET[Constants::ACTION_KEY])){
@@ -28,18 +21,41 @@ if(!$am->isLoggedIn()){
 }*/
 if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_SIGNUP) {
     //processing submitted data
-    if (AreAllStudentSignUpFieldsSet()
-        and InputValidator::validatePasswordsMatch($_POST[Constants::Users_Password], $_POST[Constants::Users_Password2])
-        and InputValidator::validateUserNameExists($_POST[Constants::Users_Col_UserName])
+    if (InputValidator::areAllFieldsSet(array(
+            Constants::Users_Password,
+            Constants::Users_Col_UserName,
+            Constants::Users_Password2,
+        ),'POST')
+        AND InputValidator::validatePasswordsMatch($_POST[Constants::Users_Password], $_POST[Constants::Users_Password2],Constants::Users_Password)
+        AND InputValidator::validateUserNameDoesNotExist($_POST[Constants::Users_Col_UserName],Constants::Users_Col_UserName)
+        AND InputValidator::validateUserName($_POST[Constants::Users_Col_UserName],Constants::Users_Col_UserName)
     ) {
-        http_response_code(200);
-        //TODO:: insert the user in database based on the supplied data
-        $response[Constants::API_MSG_KEY]='account created successfully';
+            $user=new User();
+            $user->setUserName($_POST[Constants::Users_Col_UserName]);
+            $user->setPassword($_POST[Constants::Users_Password]);
+            $user->save();
+            AccountManager::getInstance()->login($user->getId());
+            setResponseMainInfo('account created successfully',200);
     }else{
-        $response[Constants::API_MSG_KEY]='failed to crate your account';
-    }
-}else if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_LOGIN){
+            setResponseMainInfo('failed to crate your account',400);
+        }
+
+
+} else if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_LOGIN){
     //let's login
+    if(InputValidator::validateLoginParamsSet([Constants::Users_Col_UserName,Constants::Users_Password],
+        "POST",
+        ['the user name','the password'])){
+        $user=User::getByName($_POST[Constants::Users_Col_UserName]);
+        if($user && password_verify($_POST[Constants::Users_Password],$user->getPasswordHash())){
+            AccountManager::getInstance()->login($user->getId());
+            setResponseMainInfo('Login successfully',200);
+        }else{
+            setResponseMainInfo('Failed to login',400);
+            InputValidator::appendError(Constants::Users_Col_UserName,"invalid user name");
+            InputValidator::appendError(Constants::Users_Password,"invalid password");
+        }
+    };
 }else if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_ADD_CONTACT){
     //let's add a contact
 }else if($_GET[Constants::ACTION_KEY]==Constants::ACTION_TYPE_UPDATE_CONTACT){

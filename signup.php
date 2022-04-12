@@ -1,4 +1,6 @@
 <?php
+require_once 'autoloader.php';
+AccountManager::getInstance()->redirectToContactsListIfLoggedIn();
 $page_title='Sign up';
 require_once "templates/header.php" ?>
 <main class="container-fluid">
@@ -8,7 +10,7 @@ require_once "templates/header.php" ?>
                 Authenticate
             </h1>
             <form class="needs-validation" id="signupForm"
-                  data-validate-callback="">
+                  data-action="<?= Constants::ACTION_TYPE_SIGNUP?>">
                 <div class="form-group">
                     <label for="<?=Constants::Users_Col_UserName?>" class="form-label">Username</label>
                     <input

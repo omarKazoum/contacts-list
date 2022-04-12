@@ -78,7 +78,7 @@ class DBManager
      * @param int $userId the user id in users table to be found if exists
      * @return false|User returns an object of type user or false if none is found
      */
-    public function getUserById(int $userId)
+    public function getUserById($userId)
     {
         //TODO change the query to fit the new data structure
         $sql='SELECT * FROM '.Constants::Users_TableName.' WHERE '.Constants::Users_Col_Id.'='.$userId;

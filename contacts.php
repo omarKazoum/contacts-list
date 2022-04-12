@@ -1,4 +1,6 @@
 <?php
+require_once 'autoloader.php';
+AccountManager::getInstance()->redirectToIndexIfNotLoggedIn();
 $page_title='login';
 require_once "templates/header.php" ?>
 <main class="container-fluid">
