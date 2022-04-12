@@ -1,5 +1,5 @@
 <?php
-require_once 'include/ModelBase.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/ModelBase.php';
 
 
 class Contact  extends ModelBase
@@ -72,6 +72,7 @@ class Contact  extends ModelBase
             $this->email,
             $this->adress,$this->userId);
         $stmt->execute();
+        $this->id=$stmt->insert_id;
         return $stmt->affected_rows;
     }
 

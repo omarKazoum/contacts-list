@@ -1,5 +1,5 @@
 <?php
-require_once 'include/ModelBase.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/ModelBase.php';
 
 class User extends ModelBase {
     protected  static string $tableName= Constants::Users_TableName;
@@ -39,7 +39,7 @@ class User extends ModelBase {
      */
     public function getId(): int
     {
-        return $this->$id;
+        return $this->id;
 
     }
 
@@ -98,6 +98,7 @@ class User extends ModelBase {
         $stmt =self::$db_manager->getConnection()->prepare($sql);
         $stmt->bind_param( "ss",$this->userName,$this->passwordHash);
         $stmt->execute();
+        $this->id=$stmt->insert_id;
         return $stmt->get_result();
     }
 
@@ -109,5 +110,12 @@ class User extends ModelBase {
         $user->setRegisterDate($data[Constants::Users_Col_RegisterDate]);
         $user->setPasswordHash($data[Constants::Users_Col_PasswordHash]);
         return $user;
+    }
+    public static function getByName($name){
+        $res=self::queryBy(Constants::Users_Col_UserName,$name,self::$tableName);
+        if($res) {
+            return static::parseEntity($res[0]);
+        }else
+            false;
     }
 }
