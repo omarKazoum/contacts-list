@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBManager.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/include/Constants.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/include/InputValidator.php';
+
+require_once $_SERVER['DOCUMENT_ROOT']."/autoloader.php";
 class AccountManager
 {
     private const  CONNECTED_USER_ID_KEY='connected_user_id';
@@ -14,9 +12,10 @@ class AccountManager
     {
         global $session_time_out_minutes;
         //this line has no effect as it's not taken into account by the server
-        ini_set('session.gc_maxlifetime', 60*$session_time_out_minutes);
+        $str=strval(60*$session_time_out_minutes);
+        ini_set('session.gc_maxlifetime', $str);
         // each client should remember their session id for for a certain number of seconds
-        session_set_cookie_params(60*$session_time_out_minutes);
+        session_set_cookie_params($str);
         session_start();
         InputValidator::flushErrors();
         $this->logged_in=isset($_SESSION[self::CONNECTED_USER_ID_KEY]) AND !empty($_SESSION[self::CONNECTED_USER_ID_KEY]);
@@ -60,6 +59,20 @@ class AccountManager
     }
     public function getLoggedInUser():User{
         $db_manager=DBManager::getInstance();
-        return  $db_manager->getUserById($this->connectedUserId);
+        return  User::getById($this->connectedUserId);
     }
+    public function redirectToContactsListIfLoggedIn()
+    {
+        if ($this->isLoggedIn()){
+            header('location:'.getUrlFor("contacts.php"));
+            exit();
+        }
+    }
+    public function redirectToIndexIfNotLoggedIn(){
+        if (!$this->isLoggedIn()){
+            header('location:'.getUrlFor('index.php'));
+            exit();
+        }
+    }
+
 }

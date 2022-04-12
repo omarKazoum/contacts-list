@@ -1,4 +1,6 @@
 <?php
+require_once 'autoloader.php';
+AccountManager::getInstance()->redirectToContactsListIfLoggedIn();
 $page_title="Contacts list";
 require_once "templates/header.php"?>
 <main class="p-5 mb-4 bg-light rounded-3">
@@ -9,7 +11,7 @@ require_once "templates/header.php"?>
             to start creating your contacts list.
         </p>
         <p>
-            Already have an account? <a href="Youcode/workshoops/Application de gestion des contacts/login.php" class="link">Login here</a>.
+            Already have an account? <a href="/login.php" class="link">Login here</a>.
         </p>
 </main>
 <?php require_once "templates/footer.php"?>

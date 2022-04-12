@@ -29,13 +29,13 @@ $am=AccountManager::getInstance()
                </li>
             <?php }else{?>
                 <li class="nav-item">
-                    <a href="Youcode/workshoops/Application de gestion des contacts/profile.php" class="nav-link"><?= $am->getLoggedInUser()->getUserName()?></a>
+                    <a href="profile.php" class="nav-link"><?= $am->getLoggedInUser()->getUserName()?></a>
                 </li>
                 <li class="nav-item">
-                    <a href="Youcode/workshoops/Application de gestion des contacts/contacts.php" class="nav-link">Contacts</a>
+                    <a href="contacts.php" class="nav-link">Contacts</a>
                 </li>
                 <li class="nav-item">
-                    <a href="Youcode/workshoops/Application de gestion des contacts/logout.php" class="nav-link">Log out</a>
+                    <a href="logout.php" class="nav-link">Log out</a>
                 </li>
 
             <?php }?>

@@ -1,12 +1,14 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/ModelBase.php';
+
 class User extends ModelBase {
-    protected const table_name = Constants::Users_TableName;
+    protected  static string $tableName= Constants::Users_TableName;
     private string $userName;
-    private int $id;
     private string $passwordHash;
     private string $registerDate;
     public function __construct()
     {
+        parent::__construct();
     }
 
     /**
@@ -26,20 +28,19 @@ class User extends ModelBase {
     }
 
     /**
+     * @param string $passwordHash
+     */
+    public function setPasswordHash(string $passwordHash): void
+    {
+        $this->passwordHash = $passwordHash;
+    }
+    /**
      * @return int
      */
     public function getId(): int
     {
         return $this->id;
 
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     /**
@@ -77,21 +78,44 @@ class User extends ModelBase {
 
     public function update()
     {
-        // TODO: Implement update() method.
+        $sql="UPDATE ".self::$tableName." SET "
+            .Constants::Users_Col_UserName.'=?,'
+            .Constants::Users_Col_PasswordHash."=? ".
+            'WHERE '.self::ID_KEY.'=?';
+        $stmt =self::$db_manager->getConnection()->prepare($sql);
+
+        $stmt->bind_param( "sss",$this->userName,$this->passwordHash,$this->id);
+        $stmt->execute();
+        return $stmt->affected_rows;
     }
 
     public function add()
     {
-        // TODO: Implement add() method.
+        $sql="INSERT INTO ".self::$tableName."("
+            .Constants::Users_Col_UserName.','
+            .Constants::Users_Col_PasswordHash.")"
+            ."values(?,?)";
+        $stmt =self::$db_manager->getConnection()->prepare($sql);
+        $stmt->bind_param( "ss",$this->userName,$this->passwordHash);
+        $stmt->execute();
+        $this->id=$stmt->insert_id;
+        return $stmt->get_result();
     }
 
-    public function delete()
+    protected static function parseEntity(array $data)
     {
-        // TODO: Implement delete() method.
+        $user=new User();
+        $user->setId($data[Constants::Users_Col_Id]);
+        $user->setUserName($data[Constants::Users_Col_UserName]);
+        $user->setRegisterDate($data[Constants::Users_Col_RegisterDate]);
+        $user->setPasswordHash($data[Constants::Users_Col_PasswordHash]);
+        return $user;
     }
-
-    public function getAll()
-    {
-        // TODO: Implement getAll() method.
+    public static function getByName($name){
+        $res=self::queryBy(Constants::Users_Col_UserName,$name,self::$tableName);
+        if($res) {
+            return static::parseEntity($res[0]);
+        }else
+            false;
     }
 }

@@ -1,5 +1,6 @@
 <?php
-$page_title='login';
+require_once 'autoloader.php';
+AccountManager::getInstance()->redirectToContactsListIfLoggedIn();$page_title='login';
 require_once "templates/header.php" ?>
 <main class="container-fluid">
     <div class="row">
@@ -7,7 +8,8 @@ require_once "templates/header.php" ?>
             <h1 class="page-header text-align-center w-100">
                 Authenticate
             </h1>
-            <form class="">
+            <form class="needs-validation" id="signinForm"
+            data-action="<?= Constants::ACTION_TYPE_LOGIN?>">
                 <div class="form-group">
                     <label for="<?=Constants::Users_Col_UserName?>" class="form-label">Username</label>
                     <input
