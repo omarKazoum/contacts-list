@@ -1,111 +1,155 @@
 <?php
+require_once 'include/ModelBase.php';
+
 
 class Contact  extends ModelBase
 {
-    private int $id;
-    private int $nom;
-    private int $phone;
-    private int $email;
-    private int $adress;
+    protected static string $tableName=Constants::Contacts_TableName;
+    private $name;
+    private $phone;
+    private $email;
+    private $adress;
+    private $userId;
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getId(): int
+    public function getUserId()
     {
-        return $this->id;
+        return $this->userId;
     }
 
     /**
-     * @param int $id
+     * @param mixed $userId
      */
-    public function setId(int $id): void
+    public function setUserId($userId): void
     {
-        $this->id = $id;
+        $this->userId = $userId;
+    }
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
+    public function update()
+    {
+        $sql="UPDATE ".self::$tableName." SET "
+            .Constants::Contacts_Col_Name.'=?,'
+            .Constants::Contacts_Col_Email.'=?,'
+            .Constants::Contacts_Col_Adress.'=?,'
+            .Constants::Contacts_Col_Phone."=?,"
+            .Constants::Contacts_Col_UserId."=?"
+            .' WHERE '.self::ID_KEY.'=?;';
+        $stmt =self::$db_manager->getConnection()->prepare($sql);
+
+        $stmt->bind_param( "ssssss",
+            $this->name,
+            $this->email,
+            $this->adress,
+            $this->phone,
+            $this->userId,
+            $this->id
+        );
+        $stmt->execute();
+        return $stmt->affected_rows;
+    }
+
+    public function add()
+    {
+        $sql="INSERT INTO ".static::$tableName."("
+            .Constants::Contacts_Col_Phone.','
+            .Constants::Contacts_Col_Name.','
+            .Constants::Contacts_Col_Email .','
+            .Constants::Contacts_Col_Adress.','
+            .Constants::Contacts_Col_UserId
+            .')'
+            .' values(?,?,?,?,?)';
+
+        $stmt =self::$db_manager->getConnection()->prepare($sql);
+
+        $stmt->bind_param( "sssss",$this->phone,
+            $this->name,
+            $this->email,
+            $this->adress,$this->userId);
+        $stmt->execute();
+        return $stmt->affected_rows;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getNom(): int
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 
     /**
-     * @param int $nom
+     * @param mixed $name
      */
-    public function setNom(int $nom): void
+    public function setName($name): void
     {
-        $this->nom = $nom;
+        $this->name = $name;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getPhone(): int
+    public function getPhone()
     {
         return $this->phone;
     }
 
     /**
-     * @param int $phone
+     * @param mixed $phone
      */
-    public function setPhone(int $phone): void
+    public function setPhone($phone): void
     {
         $this->phone = $phone;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getEmail(): int
+    public function getEmail()
     {
         return $this->email;
     }
 
     /**
-     * @param int $email
+     * @param mixed $email
      */
-    public function setEmail(int $email): void
+    public function setEmail($email): void
     {
         $this->email = $email;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getAdress(): int
+    public function getAdress()
     {
         return $this->adress;
     }
 
     /**
-     * @param int $adress
+     * @param mixed $adress
      */
-    public function setAdress(int $adress): void
+    public function setAdress($adress): void
     {
         $this->adress = $adress;
     }
-
-
-    public function update()
+    protected static function parseEntity(array $data)
     {
-        // TODO: Implement update() method.
-    }
+            $contact=new Contact();
+            $contact->setId($data[Constants::Contacts_Col_Id]);
+            $contact->setAdress($data[Constants::Contacts_Col_Adress]);
+            $contact->setEmail($data[Constants::Contacts_Col_Email]);
+            $contact->setPhone($data[Constants::Contacts_Col_Phone]);
+            $contact->setName($data[Constants::Contacts_Col_Name]);
+            $contact->setUserId($data[Constants::Contacts_Col_UserId]);
 
-    public function add()
-    {
-        // TODO: Implement add() method.
-    }
+        return $contact;
+       }
 
-    public function delete()
-    {
-        // TODO: Implement delete() method.
-    }
 
-    public function getAll()
-    {
-        // TODO: Implement getAll() method.
-    }
 }
