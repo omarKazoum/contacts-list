@@ -9,6 +9,7 @@ class Constants
     const Users_Col_Id=ModelBase::ID_KEY;
     const Users_Col_UserName='name';
     const Users_Col_PasswordHash='pass_hash';
+    const Users_Col_RegisterDate='register_date';
     const Users_Password='pass';
     //not stored
     const Users_Password2='pass2';
@@ -36,5 +37,6 @@ class Constants
     const ACTION_TYPE_UPDATE_CONTACT="UPDATE_CONTACT";
 
     const API_MSG_KEY='message';
+    const Contacts_Col_UserId ="user_id" ;
 
 }
