@@ -1,11 +1,12 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/ModelBase.php';
 class Constants
 {
+
     //for users table
-    const Users_TableName='comptes';
-    const Users_Col_Id='id';
-    const Users_Col_Email='email';
+    const Users_TableName='users';
+    const Users_Col_Id=ModelBase::ID_KEY;
     const Users_Col_UserName='name';
     const Users_Col_PasswordHash='pass_hash';
     const Users_Password='pass';
@@ -15,7 +16,7 @@ class Constants
 
     // for contacts table
     const Contacts_TableName='contacts';
-    const Contacts_Col_Id='id';
+    const Contacts_Col_Id=ModelBase::ID_KEY;
     const Contacts_Col_Name='nom';
     const Contacts_Col_Phone='phone';
     const Contacts_Col_Email='email';
