@@ -14,9 +14,10 @@ class AccountManager
     {
         global $session_time_out_minutes;
         //this line has no effect as it's not taken into account by the server
-        ini_set('session.gc_maxlifetime', 60*$session_time_out_minutes);
+        $str=strval(60*$session_time_out_minutes);
+        ini_set('session.gc_maxlifetime', $str);
         // each client should remember their session id for for a certain number of seconds
-        session_set_cookie_params(60*$session_time_out_minutes);
+        session_set_cookie_params($str);
         session_start();
         InputValidator::flushErrors();
         $this->logged_in=isset($_SESSION[self::CONNECTED_USER_ID_KEY]) AND !empty($_SESSION[self::CONNECTED_USER_ID_KEY]);
