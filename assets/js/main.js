@@ -87,7 +87,7 @@ const addContactToList = (contactData) => {
 
             }, () => {
                 console.log("delete cancled")
-            }, "you want to delete <b>" + data.find(c => c.id == sellectedContactId).nom + "</b>");
+            }, "you want to delete " + data.find(c => c.id == sellectedContactId).nom );
 
         })
     })
@@ -181,6 +181,7 @@ const updateUi=(mode)=>{
         addContactBtn.style.display="none";
         pageHeading.textContent=ADD_FORM_HEADING;
         btnSave.textContent=ADD_BTN_TEXT;
+        contactsForm.classList.remove('was-validated');
     }else{
         contactsForm.dataset.action=ACTION_TYPE_UPDATE_CONTACT;
         addContactBtn.style.display="block";
