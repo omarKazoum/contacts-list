@@ -216,36 +216,21 @@ const alert=(message,type)=>{
 }
 const signUpAndLoginFormHandler=(event)=>{
     console.log("form submit cllaback 2");
-    try {
-        let request = new XMLHttpRequest();
-        request.open('post', '/api?action='+(event.target.dataset.action));
-        request.onreadystatechange = () => {
-            if (request.readyState === 4) {
-                res=JSON.parse(request.response);
-                switch(request.status){
-                    case 200:
-                       // alert(res.message,ALERT_TYPE_SUCCESS);
-                        window.location.href='/';
-                        break;
-                    case 400:
-                        //so we have errors let's display them to the user
-                        const keys=Object.keys(res.errors)
-                        keys.forEach((k)=>{
-                            console.log(k+':'+res.errors[k]);
-                            document.getElementsByName(k).forEach((el)=>{
-                                enableErrorOn(el,true,res.errors[k]);
-                            })
-                        })
-                        alert(res.message,ALERT_TYPE_FAILED);
-                        break;
-                    default: console.log('the server responded with code '+request.status);
-                }
-            }
-        }
-        request.send(new FormData(event.target));
-    }catch (e){
-        console.error(e);
-    }
+    sendHttpPostRequest(event.target.dataset.action,(res)=>{
+        //success
+        window.location.href='/';
+
+    },(res)=>{
+        //faillier
+        const keys=Object.keys(res.errors)
+        keys.forEach((k)=>{
+            console.log(k+':'+res.errors[k]);
+            document.getElementsByName(k).forEach((el)=>{
+                enableErrorOn(el,true,res.errors[k]);
+            })
+        })
+        alert(res.message,ALERT_TYPE_FAILED);
+    },new FormData(event.target),false)
 }
 if(signupForm!=null)
  //for signup page
@@ -267,7 +252,8 @@ if(contactsForm!=null) {
             //success
             alert(res.message, ALERT_TYPE_SUCCESS);
             if(CONTACT_MODE_ADD==contactsMode){
-                restContactsForm();
+                contactsForm.reset();
+
             }
             contactIdToBeHighlighted = res.affected.id;
             reloadContactsList()

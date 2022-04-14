@@ -32,8 +32,11 @@ const bindFormValidator=() =>{
             e.target.classList.add('was-validated');
             for (let input of inputs) {
                 console.log("bound:"+input.name);
-                if (!validateInput(input)) allValide = false;
-                enableErrorOn(input, !isInputValide,input.dataset.validateMessage);
+                isInputValide=validateInput(input)
+                if (!isInputValide) allValide = false;
+                    enableErrorOn(input, !isInputValide,input.dataset.validateMessage);
+                //input.addEventListener('keyup',e=>validateInput(e.target));
+                //input.addEventListener('change',e=>validateInput(e.target));
             }
             e.preventDefault();
             if (allValide) {
@@ -43,10 +46,10 @@ const bindFormValidator=() =>{
                 console.log('not all is valid');
             }
         })
-        form.querySelectorAll('input').forEach((input)=>{
+        /*form.querySelectorAll('input').forEach((input)=>{
             input.addEventListener('keyup',e=>validateInput(e.target));
             input.addEventListener('change',e=>validateInput(e.target));
-        })
+        })*/
     });
 }
 const validateInput=(input)=>{
