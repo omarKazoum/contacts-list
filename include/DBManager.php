@@ -55,7 +55,7 @@ class DBManager
                 .Constants::Contacts_Col_Email.' VARCHAR(100),'
                 .Constants::Contacts_Col_Name.' VARCHAR(30),'
                 .Constants::Contacts_Col_UserId.' INT,'
-                .Constants::Contacts_Col_Adress.' TEXT,'
+                .Constants::Contacts_Col_Address.' TEXT,'
                 .'CONSTRAINT FOREIGN KEY('.Constants::Contacts_Col_UserId.') REFERENCES '
                 .Constants::Users_TableName.'('.Constants::Users_Col_Id.')'
                 .');';

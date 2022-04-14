@@ -2,9 +2,9 @@
 require_once 'autoloader.php';
 AccountManager::getInstance()->redirectToContactsListIfLoggedIn();$page_title='login';
 require_once "templates/header.php" ?>
-<main class="container-fluid">
+<main class="container-fluid gray-bg ">
     <div class="row">
-        <div class="content col-12 col-md-6 offset-md-3">
+        <div class="content col-12 col-md-6 offset-md-3 panel my-3">
             <h1 class="page-header text-align-center w-100">
                 Authenticate
             </h1>
@@ -16,7 +16,8 @@ require_once "templates/header.php" ?>
                             id="<?=Constants::Users_Col_UserName?>"
                             type="text"
                             class="form-control"
-                            data-validate-pattern="\w{3,}"
+                            data-validate="0"
+                            data-validate-pattern=""
                             data-validate-message="Please fill in a valid user name"
                             placeholder="Username"
                             name="<?=Constants::Users_Col_UserName?>">
@@ -28,9 +29,9 @@ require_once "templates/header.php" ?>
                             id="<?=Constants::Users_Password?>"
                             type="password"
                             class="form-control"
-                            data-validate-pattern=".{8,}"
-                            data-validate-message="Passwords do not match"
-                            data-validate="1"
+                            data-validate-pattern=""
+                            data-validate-message=""
+                            data-validate="0"
                             name="<?=Constants::Users_Password?>">
                 </div>
                 <button class="btn btn-primary w-100 my-2" type="submit">

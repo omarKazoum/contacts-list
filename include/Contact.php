@@ -36,7 +36,7 @@ class Contact  extends ModelBase
         $sql="UPDATE ".self::$tableName." SET "
             .Constants::Contacts_Col_Name.'=?,'
             .Constants::Contacts_Col_Email.'=?,'
-            .Constants::Contacts_Col_Adress.'=?,'
+            .Constants::Contacts_Col_Address.'=?,'
             .Constants::Contacts_Col_Phone."=?,"
             .Constants::Contacts_Col_UserId."=?"
             .' WHERE '.self::ID_KEY.'=?;';
@@ -56,19 +56,22 @@ class Contact  extends ModelBase
 
     public function add()
     {
+        if($this->userId==-1 ||!isset($this->userId))
+            throw new Exception('every contact should have an associated user id');
         $sql="INSERT INTO ".static::$tableName."("
             .Constants::Contacts_Col_Phone.','
             .Constants::Contacts_Col_Name.','
             .Constants::Contacts_Col_Email .','
-            .Constants::Contacts_Col_Adress.','
+            .Constants::Contacts_Col_Address.','
             .Constants::Contacts_Col_UserId
             .')'
             .' values(?,?,?,?,?)';
 
         $stmt =self::$db_manager->getConnection()->prepare($sql);
 
-        $stmt->bind_param( "sssss",$this->phone,
-            $this->name,
+        $stmt->bind_param( "sssss",
+            $this->phone,
+        $this->name,
             $this->email,
             $this->adress,$this->userId);
         $stmt->execute();
@@ -139,11 +142,19 @@ class Contact  extends ModelBase
     {
         $this->adress = $adress;
     }
+    public static function getAllByUserId($userId):array{
+        $contactsArray=self::queryBy(Constants::Contacts_Col_UserId,$userId,self::$tableName);
+        if($contactsArray)
+        foreach ($contactsArray as $key=> $row){
+            $contactsArray[$key]=self::parseEntity($row);
+        }
+        return $contactsArray;
+    }
     protected static function parseEntity(array $data)
     {
             $contact=new Contact();
             $contact->setId($data[Constants::Contacts_Col_Id]);
-            $contact->setAdress($data[Constants::Contacts_Col_Adress]);
+            $contact->setAdress($data[Constants::Contacts_Col_Address]);
             $contact->setEmail($data[Constants::Contacts_Col_Email]);
             $contact->setPhone($data[Constants::Contacts_Col_Phone]);
             $contact->setName($data[Constants::Contacts_Col_Name]);
@@ -151,6 +162,20 @@ class Contact  extends ModelBase
 
         return $contact;
        }
+    public function getAsArray(){
+        return [Constants::Contacts_Col_Id=>$this->id,
+            Constants::Contacts_Col_Name=>$this->name,
+            Constants::Contacts_Col_Email=>$this->email,
+            Constants::Contacts_Col_Phone=>$this->phone,
+            Constants::Contacts_Col_UserId=>$this->userId,
+            Constants::Contacts_Col_Address=>$this->adress
+            ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->getAsArray());
+    }
 
 
 }

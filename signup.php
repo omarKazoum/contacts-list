@@ -3,9 +3,9 @@ require_once 'autoloader.php';
 AccountManager::getInstance()->redirectToContactsListIfLoggedIn();
 $page_title='Sign up';
 require_once "templates/header.php" ?>
-<main class="container-fluid">
+<main class="container-fluid gray-bg">
     <div class="row">
-        <div class="content col-12 col-md-6 offset-md-3">
+        <div class="content col-12 col-md-6 offset-md-3 panel my-3">
             <h1 class="page-header text-align-center w-100">
                 Authenticate
             </h1>

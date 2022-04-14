@@ -21,7 +21,10 @@ class Constants
     const Contacts_Col_Name='nom';
     const Contacts_Col_Phone='phone';
     const Contacts_Col_Email='email';
-    const Contacts_Col_Adress='adress';
+    const Contacts_Col_Address='adress';
+    const Contacts_Col_UserId ="user_id" ;
+
+    const Contacts_Affected_Contact_Key="affected";
 
 
     //for remember me option
@@ -36,9 +39,9 @@ class Constants
     const ACTION_TYPE_ADD_CONTACT="ADD_CONTACT";
     const ACTION_TYPE_UPDATE_CONTACT="UPDATE_CONTACT";
     const ACTION_TYPE_LIST_CONTACTS="LIST_CONTACTS";
+    const ACTION_TYPE_DELETE_CONTACT="DELETE_CONTACTS";
 
 
     const API_MSG_KEY='message';
-    const Contacts_Col_UserId ="user_id" ;
-
+    const ApiDataKey="data";
 }

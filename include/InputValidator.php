@@ -24,10 +24,10 @@ class InputValidator
      *  <li>can contain at least a special character .<b>.</b>,@,&lt;,>,/,\,$ </li>
      * </ul>
      * <b>In Regex: <code>/^[\w\*\$@\+\.\,]{8,}$/</code></b>
-     * @param string $password
+     * @param  $password
      * @return bool
      */
-    public static function validatePassword(string $password,$key):bool{
+    public static function validatePassword( $password,$key):bool{
         $res=preg_match(self::PASSWORD_PATTERN,$password);
         if(!$res){
             self::appendError($key,"Password must be at least 8 characters long");
@@ -40,17 +40,17 @@ class InputValidator
      *  <li>must be a valide email adress</li>
      * </ul>
      * <b>Regex used <code>^([\w]{1,30})@([\w]{1,20})\.([\w]{1,20})$</code></b>
-     * @param string $email
+     * @param  $email
      * @return bool
      */
-    public static function validateEmail(string $email,$key):bool{
+    public static function validateEmail($email,$key):bool{
         $res=preg_match(self::EMAIL_PATTERN,$email);
         if(!$res){
             self::appendError($key,'Invalid email address');
         }
         return $res;
     }
-    public static function validatePasswordsMatch(string $password1,string $password2,$key){
+    public static function validatePasswordsMatch( $password1, $password2,$key){
         $isPasswordValid=self::validatePassword($password1,$key);
         $isPasswordsMatch=$password1==$password2 ;
         if(!$isPasswordsMatch){
@@ -58,16 +58,16 @@ class InputValidator
         }
         return $isPasswordsMatch AND $isPasswordValid;
     }
-    public static function validatePhone(string $phoneNbr,$key){
+    public static function validatePhone($phoneNbr,$key){
         $isPhoneValid=preg_match(self::PHONE_PATTERN,$phoneNbr);;
         if(!$isPhoneValid)
             self::appendError($key,"Invalid phone number:must start with 212 or 0 and then 6,5 or 8 followed by 8 numbers");
         return $isPhoneValid;
     }
-    public static function error(string $input_key){
+    public static function error( $input_key){
         return $_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][$input_key]??false;
     }
-    public static function validateUserNameDoesNotExist(string $userName,$key)
+    public static function validateUserNameDoesNotExist( $userName,$key)
     {
         $exists=User::getByName($userName);
         if($exists)
@@ -82,7 +82,7 @@ class InputValidator
         );
         return self::areAllFieldsSet($userFields,'POST');
     }
-    static function areAllFieldsSet(array $fields,string $method,array $fieldsCustomNames=[]) :bool{
+    static function areAllFieldsSet(array $fields, $method,array $fieldsCustomNames=[]) :bool{
         $isAllSet=true;
         foreach ($fields as $key=> $field){
             if(($method =='GET' and !isset($_GET[$field])) or ($method =='POST' and !isset($_POST[$field]) )) {

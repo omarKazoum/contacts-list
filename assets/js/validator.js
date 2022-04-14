@@ -4,14 +4,15 @@
  * @param enable
  */
 const enableErrorOn=(el,enable,message)=>{
-        el.setCustomValidity(enable?' ':'');
-        let errorEl=el.parentNode.querySelector('.invalid-feedback')
-        if(errorEl==null){
-           errorEl=document.createElement('div');
-           errorEl.classList.add('invalid-feedback');
-           el.parentNode.appendChild(errorEl);
-        }
-        errorEl.textContent=message;
+    el.closest('form.needs-validation').classList.add('was-validated');
+    el.setCustomValidity(enable?' ':'');
+    let errorEl=el.parentNode.querySelector('.invalid-feedback')
+    if(errorEl==null){
+        errorEl=document.createElement('div');
+        errorEl.classList.add('invalid-feedback');
+        el.parentNode.appendChild(errorEl);
+    }
+    errorEl.textContent=message;
 }
 
 /**
@@ -32,7 +33,7 @@ const bindFormValidator=() =>{
                 console.log("bound:"+input.name);
                 let isInputValide = input.value.match(input.dataset.validatePattern);
                 if(input.hasAttribute('data-validate-match')){
-                   let elementToMatch= document.getElementById(input.dataset.validateMatch);
+                    let elementToMatch= document.getElementById(input.dataset.validateMatch);
                     isInputValide=input.value==elementToMatch.value;
                 }
                 if (!isInputValide) allValide = false;
@@ -58,7 +59,7 @@ const validateInput=(e)=>{
         let elementToMatch= document.getElementById(input.dataset.validateMatch);
         isInputValide=input.value==elementToMatch.value && elementToMatch.value.match(elementToMatch.dataset.validatePattern);
     }else{
-        isInputValide= input.value.match(input.dataset.validatePattern);
+        isInputValide= null!=input.value.match(input.dataset.validatePattern);
     }
     enableErrorOn(input, !isInputValide,input.dataset.validateMessage);
 }
