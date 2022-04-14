@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT']."/autoloader.php";
 class AccountManager
 {
     private const  CONNECTED_USER_ID_KEY='connected_user_id';
+    private const LAST_LOGGED_IN_TIME_TIME='last_logged_in';
     private  string $connectedUserId='';
     private  bool $logged_in=false;
     private static ?AccountManager $instance=null;
@@ -33,6 +34,8 @@ class AccountManager
         global $session_time_out_minutes;
         // server should keep session data for a certain number of seconds
         $_SESSION[self::CONNECTED_USER_ID_KEY]=$userId;
+        $_SESSION[self::LAST_LOGGED_IN_TIME_TIME]=date("l,d \of M Y , H:i:s");
+
     }
     public function logOut(){
         session_unset();
@@ -73,6 +76,11 @@ class AccountManager
             header('location:'.getUrlFor('index.php'));
             exit();
         }
+    }
+
+    public function getLastLogin()
+    {
+        return $_SESSION[self::LAST_LOGGED_IN_TIME_TIME];
     }
 
 }

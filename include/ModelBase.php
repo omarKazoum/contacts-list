@@ -9,8 +9,6 @@ abstract class ModelBase
 {
     const ID_KEY='id';
     protected int $id=-1;
-
-
     protected  static string $tableName='';
     protected static DBManager $db_manager;
     public function __construct()
@@ -41,8 +39,9 @@ abstract class ModelBase
         return self::$db_manager->getConnection()->query("DELETE FROM ".static::$tableName." WHERE ".ModelBase::ID_KEY."='$this->id';");
     }
     public function save(){
-        if($this->id==-1)
+        if($this->id==-1){
             $this->add();
+        }
         else $this->update();
     }
     protected abstract function add();

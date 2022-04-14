@@ -1,17 +1,93 @@
 $colorPurple:#8021FE;
 $colorGray:#E8EBEF;
 $colorBlack:#111;
-:root{
-  --bs-primary:$colorPurple !important;
+$colorGray:#F3F2EF;
+body{
+  background-color: #f3f2ef !important;
 }
-.btn-primary{
-  background-color: $colorPurple !important;
-  border-color: $colorPurple !important;
+:root{
 }
 .link{
   color: $colorPurple;
   text-decoration: none;
   &:hover{
-    color:$colorPurple;
+    color:$colorPurple ;
+  }
+}
+.contacts-table{
+
+  .card{
+    &:hover{
+      background-color: $colorGray;
+      color: #3b3838;
+      cursor: pointer;
+    }
+    .btn{
+      &:hover{
+        color:$colorPurple;
+      }
+    }
+  }
+}
+.btn-primary{
+  background-color: $colorPurple !important;
+  border-color: $colorPurple !important;
+}
+.table > * {
+  border: 1px #ddd solid !important;
+  padding: 5px;
+}
+.gray-bg{
+  background-color: $colorGray !important;
+  .panel{
+    background-color: white !important;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    padding-top:10px ;
+    padding-bottom:10px ;
+    &.no-padding{
+      padding: 0px;
+    }
+      &--heading{
+        border-bottom:1px solid #eee;
+        padding: 10px 0px 10px 0px !important;
+      }
+  }
+
+}
+@keyframes highlightSuccess {
+  0%{
+    background-color: #fff ;
+    transform: scale(0,0);
+  }
+  50%{
+    transform: scale(1,1.5);
+  }
+  100%{
+    transform: scale(1,1);
+    background-color: #10b510 ;
+  }
+}
+@keyframes highlightForm {
+  0%{
+    border-color: #fff ;
+  }
+  50%{
+    border-color:green ;
+  background-color: #9c76e8;
+  }
+  100%{
+    border-color: #fdfdfd ;
+  }
+}
+
+@keyframes remove {
+  0%{
+    transform: scale(1,1);
+    background-color: #fff;
+  }
+  100%{
+    transform: scale(1,0);
+    background-color: #e05858;
   }
 }

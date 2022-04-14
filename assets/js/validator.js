@@ -4,7 +4,9 @@
  * @param enable
  */
 const enableErrorOn=(el,enable,message)=>{
-        el.setCustomValidity(enable?' ':'');
+        if(enable)
+            el.closest('form').classList.add('was-validated')
+    el.setCustomValidity(enable?' ':'');
         let errorEl=el.parentNode.querySelector('.invalid-feedback')
         if(errorEl==null){
            errorEl=document.createElement('div');
@@ -22,7 +24,7 @@ const enableErrorOn=(el,enable,message)=>{
  */
 const bindFormValidator=() =>{
     document.querySelectorAll('form.needs-validation').forEach((form) => {
-        console.log('bound form '+form);
+        console.log('bound form ');
         console.log(form);
         form.addEventListener('submit', (e) => {
             const inputs = e.target.querySelectorAll("[data-validate='1']");
@@ -30,17 +32,9 @@ const bindFormValidator=() =>{
             e.target.classList.add('was-validated');
             for (let input of inputs) {
                 console.log("bound:"+input.name);
-                let isInputValide = input.value.match(input.dataset.validatePattern);
-                if(input.hasAttribute('data-validate-match')){
-                   let elementToMatch= document.getElementById(input.dataset.validateMatch);
-                    isInputValide=input.value==elementToMatch.value;
-                }
-                if (!isInputValide) allValide = false;
+                if (!validateInput(input)) allValide = false;
                 enableErrorOn(input, !isInputValide,input.dataset.validateMessage);
-                input.addEventListener('keyup',validateInput);
-                input.addEventListener('change',validateInput);
             }
-
             e.preventDefault();
             if (allValide) {
                 console.log('all valid');
@@ -49,10 +43,13 @@ const bindFormValidator=() =>{
                 console.log('not all is valid');
             }
         })
+        form.querySelectorAll('input').forEach((input)=>{
+            input.addEventListener('keyup',e=>validateInput(e.target));
+            input.addEventListener('change',e=>validateInput(e.target));
+        })
     });
 }
-const validateInput=(e)=>{
-    const input=e.target;
+const validateInput=(input)=>{
     let isInputValide ;
     if(input.hasAttribute('data-validate-match')){
         let elementToMatch= document.getElementById(input.dataset.validateMatch);
@@ -61,5 +58,11 @@ const validateInput=(e)=>{
         isInputValide= input.value.match(input.dataset.validatePattern);
     }
     enableErrorOn(input, !isInputValide,input.dataset.validateMessage);
+    return isInputValide;
+}
+const forceValidateAllInputs=(form)=>{
+    form.querySelectorAll('input').forEach((input)=>{
+        validateInput(input);
+    })
 }
 bindFormValidator();
